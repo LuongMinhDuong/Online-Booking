@@ -34,3 +34,10 @@
         ?>
 
     </div>
+
+    <?php session_start();
+
+if (!isset($_SESSION['check_login']) || $_SESSION['check_login'] == false) {
+    header('Location: ../login/form.php');
+}
+?>

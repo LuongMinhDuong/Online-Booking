@@ -1,10 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['check_login']) || $_SESSION['check_login'] == false) {
-    header('Location: ../login/form.php');
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -69,9 +62,9 @@ if (!isset($_SESSION['check_login']) || $_SESSION['check_login'] == false) {
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Quản lý accounts</h6>
-                        <a class="collapse-item" href="">Admin</a>
-                        <a class="collapse-item" href="">Staff</a>
-                        <a class="collapse-item" href="mypage.php">User</a>
+                        <a class="collapse-item" href="index-account.php">Thông tin account</a>
+                        <!-- <a class="collapse-item" href="">Staff</a>
+                        <a class="collapse-item" href="mypage.php">User</a> -->
                     </div>
                 </div>
             </li>

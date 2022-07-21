@@ -1,9 +1,8 @@
-<?php
-include 'header.php';
+<?php session_start();
 include('../conn.php');
-include("function.php");
+include("../admin/function.php");
 ?>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <table class="styled-table">
     <style>
         .styled-table {
@@ -54,9 +53,9 @@ include("function.php");
         </tr>
     </thead>
 
-    <?php showBooking($conn); ?>
+    <?php showUserBooking($conn); ?>
 </table>
 <a href="../index.php" class="btn btn-danger" style="margin-left:60px">Về trang chủ</a>
 <?php
-include 'footer.php';
+include '../layouts/footer.php';
 ?>

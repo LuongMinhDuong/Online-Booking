@@ -1,7 +1,7 @@
 <?php
 include('./conn.php');
 
-if (isset($_SESSION['user']) == true) {
+if (isset($_SESSION['user']['role']) == 3) {
     echo 'Xin chào!, ' . $_SESSION['user']['username'] . ' |<a href="./login/logout.php"> Đăng xuất</a>' . '</h5>';
 }
 if (isset($_SESSION['id']) == false) {
@@ -29,7 +29,7 @@ $qr = $conn->query($s);
             <h3 class="name">Phòng: <?= $r['room'] ?></h3>
             <h4 class="price">Giá: <?= $r['price'] . '$' ?></h4>
             Trạng thái:
-            <a href="admin/booking.php?id=<?= $r['id'] ?>" class="btn btn-primary <?= $disabled ?> <?= $disabled2 ?>">Booking</a>
+            <a href="booking/booking.php?id=<?= $r['id'] ?>" class="btn btn-primary <?= $disabled ?> <?= $disabled2 ?>">Booking</a>
         </div>
     <?php
     }

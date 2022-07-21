@@ -1,7 +1,7 @@
-<?php
+<?php session_start();
 include('conn.php');
 
-session_start();
+
 ?>
 
 <!DOCTYPE html>

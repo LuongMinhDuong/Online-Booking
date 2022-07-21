@@ -1,5 +1,6 @@
 <?php
 include '../conn.php';
+// session_start();
 
 function getRoom($conn)
 {
@@ -26,35 +27,92 @@ function getRoom($conn)
     }
     echo $str;
 }
-
-function addRoom($conn)
+function test_input($data)
 {
-    if (isset($_GET['ten']) && isset($_GET['anh']) && isset($_GET['gia']) && isset($_GET['tinhtrang'])) {
-        $name = $_GET['ten'];
-        $image = $_GET['anh'];
-        $price = $_GET['gia'];
-        $status = $_GET['tinhtrang'];
-        $s = "INSERT INTO rooms VALUES (NULL, '$name', '$image', '$price', '$status')";
-        $result = $conn->query($s);
-        if ($result) {
-            header("Location: index-room.php");
-        }
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+function test_price($price)
+{
+    $number    = preg_match('@[0-9]@', $price);
+    if (!$number) {
+        return false;
+    } else {
+        return true;
     }
 }
 
+function addRoom($conn)
+{
+    if (isset($_POST['ten']) && isset($_POST['gia']) || isset($_POST['anh'])) {
+        $name = $_POST['ten'];
+        $image = $_POST['anh'];
+        $price = $_POST['gia'];
+        $error = [];
+        if (empty($_POST["ten"])) {
+            $error['name'] = "<h6>Tên bắt buộc nhập!</h6>";
+        } elseif (checkRoomExists($conn, $name)) {
+            $error['name'] = "<h6>Tên phòng đã tồn tại!</h6>";
+        } else {
+            $name = test_input($_POST["ten"]);
+            if (!preg_match('@[0-9]@', $name)) {
+                $error['name'] = "<h6>Tên phòng bắt buộc là số!</h6>";
+            }
+        }
+
+        if (empty($_POST['gia'])) {
+            $error['price'] = "<h6>Vui lòng nhập giá!</h6>";
+        } else {
+            $price = test_input($_POST['gia']);
+            if (!preg_match('@[0-9]@', $price)) {
+                $error['price'] = '<h6>Chỉ được nhập số!</h6>';
+            }
+        }
+
+        if ($error == null) {
+            $s = "INSERT INTO `rooms`(`room`, `image`, `price`, `status`) VALUES ('$name','$image', '$price',0)";
+            $result = $conn->query($s);
+            if ($result) {
+                header("Location: index-room.php");
+            }
+        } else {
+            $_SESSION['err'] = $error;
+            return header("Location: create-room.php");
+        }
+    } else {
+        die('loi');
+    }
+}
+function checkRoomExists($conn, $name)
+{
+    $sql = "SELECT * FROM rooms WHERE room = '$name'";
+    $qr = $conn->query($sql);
+    if ($qr->num_rows > 0) {
+        return $qr->fetch_assoc();
+    }
+}
 function booking($conn)
 {
     if (isset($_POST['checkin']) && isset($_POST['checkout'])) {
-        $id_account = $_POST['id_account'];
+        $id_account = $_SESSION['all']['id_account'];
         $id_room = $_POST['id_room'];
         $checkin = $_POST['checkin'];
         $checkout = $_POST['checkout'];
         $s = "INSERT INTO bookings(checkin, checkout, status, id_account, id_room) VALUES ('$checkin', '$checkout', 1, '$id_account','$id_room')";
         $result = $conn->query($s);
+        // var_dump($result);
+        // exit;
         if ($result) {
             $conn->query("UPDATE rooms SET status = 1 WHERE id = '$id_room'");
-            header("Location: mypage.php");
+            header("Location: ../booking/mypage.php");
+        } else {
+            die('Check k ton tai');
         }
+    } else {
+        die('Check k ton tai');
     }
 }
 
@@ -104,7 +162,7 @@ function getOnUser($conn)
     }
 }
 
-function showBooking($conn)
+function showUserBooking($conn)
 {
 
     $id_user = $_SESSION['id'];
@@ -130,6 +188,14 @@ function deleteBooking($conn, $id)
     $sql = "DELETE FROM `bookings` WHERE id_room = $id";
     if ($conn->query($sql) === TRUE) {
         header("Location: ../index.php");
+    }
+}
+
+function adminDeleteBooking($conn, $id)
+{
+    $sql = "DELETE FROM `bookings` WHERE id_room = $id";
+    if ($conn->query($sql) === TRUE) {
+        header("Location: booking.php");
     }
 }
 
@@ -169,6 +235,63 @@ function deleteRoom($conn)
     }
 }
 
-function searchRoom($conn)
+function getAccount($conn)
 {
+    $s = "SELECT * FROM accounts";
+    $qr = $conn->query($s);
+    $str = '';
+    $role = '';
+    $del = '';
+    while ($r = $qr->fetch_assoc()) {
+        if ($r['role'] == 1) {
+            $role = 'Admin';
+            $del = '';
+        } else if ($r['role'] == 2) {
+            $role = 'Staff';
+            $del = '<a href="delete-account.php?id=' . $r['id_account'] . '">Delete</a>';
+        } else {
+            $role = 'User';
+            $del = '<a href="delete-account.php?id=' . $r['id_account'] . '">Delete</a>';
+        }
+        $str .= '<tr>
+        <th>' . $r['username'] . '</th>
+        <th>' . $r['email'] . '</th>
+        <th>' . $r['phone'] . '</th>
+        <th>' . $role . '</th>
+        <th>' . $del . '</th>
+        </tr>';
+    }
+    echo $str;
+}
+
+function deleteAccount($conn)
+{
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $sql = "DELETE FROM accounts WHERE id_account = $id";
+        if ($conn->query($sql) === TRUE) {
+            header("Location: index-account.php");
+        } else {
+            echo "Error deleting record: " . $conn->error;
+        }
+    } else {
+        die('loi');
+    }
+}
+
+function showBooking($conn)
+{
+    $s = "SELECT * FROM bookings ";
+    $qr = $conn->query($s);
+    $str = '';
+    while ($r = $qr->fetch_assoc()) {
+        $str .= '<tr>
+        <th>' . getNameOfRoom($conn, $r['id_room'])['room'] . '</th>
+        <th>' . getNameOfUser($conn, $r['id_account'])['username'] . '</th>
+        <th>' . $r['checkin'] . '</th>
+        <th>' . $r['checkout'] . '</th>
+        <th><a href="update-status-of-room.php?id_room=' . $r['id_room'] . '">Cancel</a></th>
+        </tr>';
+    }
+    echo $str;
 }

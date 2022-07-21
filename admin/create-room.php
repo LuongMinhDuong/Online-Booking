@@ -1,5 +1,6 @@
 <?php include("../conn.php");
 include("function.php");
+session_start();
 ?>
 <?php
 include("header.php");
@@ -104,14 +105,22 @@ include("header.php");
     </style>
     </style>
     <h2>Thêm mới phòng</h2>
-    <form action="add-room.php" method="get" name="" enctype="multipart/form-data">
-        <input type="text" name="ten" placeholder="Nhập tên phòng" />
+    <?php
+    // var_dump($_SESSION['err']);
+    ?>
+    <form action="add-room.php" method="post" enctype="multipart/>">
+        <div>
+            <input type="text" name="ten" placeholder="Nhập tên phòng" />
+            <span class="error"> <?= (isset($_SESSION['err']['name']) ? $_SESSION['err']['name'] :  '') ?></span>
+        </div>
         <label for="" style="color: white; margin-right:965px; margin-top:10px">
             <input type="file" name="anh" />
         </label>
-        <input type="text" name="gia" placeholder="Nhập giá" />
-        <input type="text" name="tinhtrang" placeholder="Nhập tình trạng" />
-        <input type="submit" value="Thêm" />
+        <div>
+            <input type="text" name="gia" placeholder="Nhập giá" />
+            <span class="error"> <?= (isset($_SESSION['err']['price']) ? $_SESSION['err']['price'] :  '') ?></span>
+        </div>
+        <input type="submit" name="submit" value="Add" />
     </form>
 </div>
 <?php

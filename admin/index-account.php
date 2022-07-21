@@ -1,9 +1,9 @@
-<?php session_start();
-include("header.php");
-include("../conn.php");
+<?php include("../conn.php");
 include("function.php");
 ?>
-
+<?php
+include("header.php");
+?>
 <table class="styled-table">
     <style>
         .styled-table {
@@ -46,15 +46,15 @@ include("function.php");
     </style>
     <thead>
         <tr>
-            <th>Tên phòng</th>
-            <th>Người đặt</th>
-            <th>Checkin</th>
-            <th>Check out</th>
-            <th>Hành Động</th>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Vai trò</th>
+            <th>Hành động</th>
         </tr>
     </thead>
 
-    <?php showBooking($conn); ?>
+    <?php getAccount($conn); ?>
 </table>
 <?php
 include("footer.php");

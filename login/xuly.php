@@ -12,6 +12,7 @@ function login($email, $password)
         $_SESSION['check_login'] = true;
         $_SESSION['user'] = $data['role'];
         $_SESSION['id'] = $data['id_account'];
+        $_SESSION['all'] = $data;
         if ($data['role'] == '1') {
             // $verification_code = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
             echo '<script>alert("Đăng nhập Admin thành công!")</script>';
@@ -55,7 +56,7 @@ function sendCode($email)
     if ($getCode) {
         $conn->query("UPDATE email_code SET code = '$verification_code' WHERE user_email = '$email'");
     } else {
-        $sql = "INSERT INTO email_code(code, user_email) VALUES('$verification_code', '$email')";
+        $sql = "INSERT INTO email_code(code, user_email) VALUES ('$verification_code', '$email')";
         $result = $conn->query($sql);
     }
 
