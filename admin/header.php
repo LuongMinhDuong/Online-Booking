@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['check_login']) || $_SESSION['check_login'] == false) {
+    header('Location: ../login/form.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -64,7 +71,7 @@
                         <h6 class="collapse-header">Quản lý accounts</h6>
                         <a class="collapse-item" href="">Admin</a>
                         <a class="collapse-item" href="">Staff</a>
-                        <a class="collapse-item" href="">User</a>
+                        <a class="collapse-item" href="mypage.php">User</a>
                     </div>
                 </div>
             </li>
@@ -336,7 +343,7 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="../login/form.php" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="../login/logout.php" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>

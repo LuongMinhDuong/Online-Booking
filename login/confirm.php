@@ -14,17 +14,16 @@ include 'xuly.php';
     <title>Trang đăng nhập</title>
 </head>
 <?php
-if (isset($_POST['email']) && isset($_POST['password'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $checkLogin = checkLogin($email, $password);
-    if ($checkLogin['role'] == 1) {
-        $_SESSION['email'] = $email;
-        $_SESSION['password'] = $password;
-        sendCode($email);
-        header("Location:confirm.php");
-    } else {
+if (isset($_POST['code'])) {
+    $code = $_POST['code'];
+    $email = $_SESSION['email'];
+    $password = $_SESSION['password'];
+    $confirmCode = confirmCode($email, $code);
+
+    if ($code == $confirmCode['code']) {
         login($email, $password);
+    } else {
+        echo '<script>alert("Mã OTP không đúng! Vui lòng nhập lại")</script>';
     }
 }
 ?>
@@ -32,24 +31,16 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
 <body>
     <div id="wrapper">
         <form method="post" id="form-login">
-            <h1 class="form-heading">Login</h1>
+            <h1 class="form-heading">Xác thực OTP</h1>
             <!-- <div class="form-group">
                 <i class="fas fa-user"></i>
                 <input type="text" name="username" class="form-input" placeholder="Tên đăng nhập">
             </div> -->
             <div class="form-group">
-                <i class="fas fa-envelope"></i>
-                <input type="text" name="email" class="form-input" placeholder="Email">
-            </div>
-            <div class="form-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" name="password" class="form-input" placeholder="Mật khẩu">
-                <div id="eye">
-                    <i class="far fa-eye"></i>
-                </div>
+                <input type="text" name="code" class="form-input">
             </div>
             <a href="../index.php">Trở về trang chủ</a>
-            <input type="submit" name="login" value="Đăng nhập" class="form-submit">
+            <input type="submit" name="confirm" value="Đăng nhập" class="form-submit">
         </form>
     </div>
 

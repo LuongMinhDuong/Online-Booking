@@ -1,0 +1,36 @@
+<div class="txt_timer left" id="clockPC">Thứ năm, 9/12/2021 | 08:55 GMT+7</div>	
+             <div class="left">
+                
+             </div>
+                          <!-- <a href="" class="txt_24h left">Search</a>
+                          <a href="#" class="img_rss left"><img src="" alt=""></a> -->
+             <div class="block_search_web left">
+                <form action="" method="get" target="" id="search">
+                   <input name="key" value="" maxlength="80" class="txt_input" type="text">
+                   <input value="" class="icon_search_web" type="submit">
+                </form>
+             </div>
+
+   <div class="search">
+        <?php
+        if (isset($_GET['key'])) {
+            $keyy = $_GET['key'];
+            $s = "select * from tin where TieuDe like '%$keyy%'";
+            // echo $s;
+            $qr = $conn->query($s);
+            echo '<h3>Kết quả tìm kiếm:</h3>';
+            while ($r_s = $qr->fetch_assoc()) {
+                echo ' <div class="techno-item" style="">
+                    <div class="techno-item-img">
+                        <a href="trangtin.php?id=' . $r_s['idTin'] . '"><img src="images/' . $r_s['urlHinh'] . '" width="300" height="150" alt="techno-1"></a>
+                    </div>
+                <div class="techno-item-content">
+                    <span>' . $r_s['Ngay'] . '</span>
+                        <h3><a href="trangtin.php?id=' . $r_s['idTin'] . '">' . $r_s['TieuDe'] . '</a></h3>
+                    </div>
+                </div>';
+            }
+        }
+        ?>
+
+    </div>

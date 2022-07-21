@@ -1,29 +1,54 @@
 <?php
 include 'header.php';
-include '../conn.php'
-?>
+include '../conn.php';
+include 'function.php';
 
-<?php
-echo '<h1>Thống kê người dùng hệ thống</h1>';
-$sql = "SELECT id_account, username, email, phone, role FROM accounts";
-$role = '';
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        if ($row['role'] == 1) {
-            $role = 'Admin';
-        } else if ($row['role'] == 2) {
-            $role = 'Staff';
-        } else {
-            $role = 'user';
-        }
-        echo "- Id: " . $row["id_account"] . " - Họ và Tên: " . $row["username"] . " - Email: " . $row["email"] . " - Số điện thoại: " . $row["phone"] . " - Vai trò: " . $role . "<br>";
-    }
-} else {
-    echo "0 results";
-}
-$conn->close();
+
+$role = $_SESSION['user'];
+
+$checkLogin = $_SESSION['check_login'];
+
+
 ?>
+<html>
+
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        var admin = <?= getOnAdmin($conn)['soluong']; ?>;
+        var staff = <?= getOnStaff($conn)['soluong']; ?>;
+        var user = <?= getOnUser($conn)['soluong']; ?>;
+    </script>
+    <script type="text/javascript">
+        google.charts.load("current", {
+            packages: ["corechart"]
+        });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Vai trò', 'Số lượng'],
+                ['Admin', admin],
+                ['Staff', staff],
+                ['User', user],
+            ]);
+
+            var options = {
+                title: 'Thống kê tài khoản',
+                is3D: true,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+
+<body>
+    <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+</body>
+
+</html>
 
 <?php
 include 'footer.php';

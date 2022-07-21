@@ -18,6 +18,7 @@
 <body>
     <?php
     include_once '../conn.php';
+    include_once 'xuly.php';
     $usernameErr = $passwordErr = $confirmpasswordErr = $emailErr = $phoneErr  = NULL;
     $username = $password = $confirmpassword = $email = $phone = NULL;
 
@@ -56,8 +57,16 @@
 
     testMail();
 
+    // function checkEmail($email)
+    // {
+    //     if (isset($_POST['email']) == $email) {
+    //         echo 'Email đã tồn tại';
+    //     }
+    // }
 
     $flag = true;
+    date_default_timezone_set("Asia/Ho_Chi_Minh");
+    $now = date('d-m-Y H:i:s');
     // if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['submit'])) {
         // $username = test_input($_POST['username']);
@@ -106,6 +115,8 @@
         if ($flag == true) {
             $sql = "INSERT INTO accounts (username, password, email, phone) VALUES ('$username', '$password', '$email', '$phone')";
             if ($conn->query($sql) === true) {
+                $last_id = $conn->insert_id;
+                sendLink($email, $now);
                 echo '<script>alert("Đăng ký tài khoản thành công!")</script>';
                 header("refresh: 1; url = ../index.php");
             } else {
@@ -114,50 +125,6 @@
         }
     }
 
-    // use PHPMailer\PHPMailer\PHPMailer;
-    // use PHPMailer\PHPMailer\SMTP;
-    // use PHPMailer\PHPMailer\Exception;
-
-    // require '../vendor/autoload.php';
-
-    // if (isset($_POST['register'])) {
-    //     $name = $_POST['name'];
-    //     $email = $_POST['email'];
-    //     $password = $_POST['password'];
-    // }
-    // $mail = new PHPMailer(true);
-
-    // try {
-    //     $mail->SMTPDebug = 0;
-    //     $mail->isSMTP();
-    //     $mail->Host       = 'smtp.gmail.com';
-    //     $mail->SMTPAuth   = true;
-    //     $mail->Username   = 'duong40541@gmail.com';
-    //     $mail->Password   = 'duong27102000';
-    //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    //     $mail->Port       = 587;
-    //     //Recipients
-    //     $mail->setFrom('duong40541@gmail.com', 'Mailer');
-    //     $mail->addAddress($email, $username);
-
-    //     //Content
-    //     $mail->isHTML(true);
-    //     $verification_code = substr(number_format(time() * rand(), 0, '', ''), 0, 6);
-
-    //     $mail->Subject = 'Email verification';
-    //     $mail->Body    = '<p>Your verification code is: <b style="font-size: 30px">' . $verification_code . '</b></p>';
-
-    //     $mail->send();
-    //     $encrypted_password = password_hash($password, PASSWORD_DEFAULT);
-    //     $conn = mysqli_connect("localhost", "root", "", "onlinebooking");
-    //     $sql = "INSERT INTO accounts(username, password, email, verification_code, email_verified_at) VALUES ('" . $username . "','" . $encrypted_password . "','" . $email . "','" . $verification_code . "', NULL)";
-    //     mysqli_query($conn, $sql);
-
-    //     header("Location: email-verification.php?email=" . $email);
-    //     exit();
-    // } catch (\Exception $e) {
-    //     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-    // }
     ?>
     <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
         <div class="card pt-2 mx-auto" style="max-width: 30rem;">

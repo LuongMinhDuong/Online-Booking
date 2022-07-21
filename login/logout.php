@@ -1,5 +1,4 @@
 <?php
 session_start();
-if (session_destroy()) {
-    header('Location: form.php');
-}
+session_destroy();
+header('Location: form.php');
