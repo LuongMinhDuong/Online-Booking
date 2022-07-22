@@ -2,7 +2,7 @@
 include('./conn.php');
 
 if (isset($_SESSION['user']['role']) == 3) {
-    echo 'Xin chào!, ' . $_SESSION['user']['username'] . ' |<a href="./login/logout.php"> Đăng xuất</a>' . '</h5>';
+    echo '<div style="margin-left: 1150px"><h5>Xin chào!, ' . $_SESSION['user']['username'] . ' |<a href="./login/logout.php"> Đăng xuất</a>' . '</h5></div>';
 }
 if (isset($_SESSION['id']) == false) {
     $disabled2 = 'disabled';

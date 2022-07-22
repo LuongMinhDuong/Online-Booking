@@ -4,7 +4,7 @@ include '../conn.php';
 
 function getRoom($conn)
 {
-    $s = "SELECT * FROM rooms";
+    $s = "SELECT * FROM rooms ORDER BY id DESC";
     $qr = $conn->query($s);
     $str = '';
     $status = '';
@@ -168,7 +168,7 @@ function showUserBooking($conn)
     $id_user = $_SESSION['id'];
     // var_dump($id_user);
     // exit;
-    $s = "SELECT * FROM bookings WHERE id_account = '$id_user'";
+    $s = "SELECT * FROM bookings WHERE id_account = '$id_user' ORDER BY id";
     $qr = $conn->query($s);
     $str = '';
     while ($r = $qr->fetch_assoc()) {
@@ -281,7 +281,7 @@ function deleteAccount($conn)
 
 function showBooking($conn)
 {
-    $s = "SELECT * FROM bookings ";
+    $s = "SELECT * FROM bookings ORDER BY id";
     $qr = $conn->query($s);
     $str = '';
     while ($r = $qr->fetch_assoc()) {

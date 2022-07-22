@@ -57,50 +57,62 @@
 
     testMail();
 
-    // function checkEmail($email)
-    // {
-    //     if (isset($_POST['email']) == $email) {
-    //         echo 'Email đã tồn tại';
-    //     }
-    // }
+    function checkMailExists($conn, $email)
+    {
+        $sql = "SELECT * FROM accounts WHERE email = '$email'";
+        $qr = $conn->query($sql);
+        if ($qr->num_rows > 0) {
+            return $qr->fetch_assoc();
+        }
+    }
+
 
     $flag = true;
     date_default_timezone_set("Asia/Ho_Chi_Minh");
     $now = date('d-m-Y H:i:s');
     // if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['submit'])) {
-        // $username = test_input($_POST['username']);
-        // $password = test_input($_POST['password']);
-        // $email = test_input($_POST['email']);
-        // $phone = test_input($_POST['phone']);
-        // $password = password_hash($password, PASSWORD_DEFAULT);
-        if (empty($_POST["username"]))
+        $username = ($_POST['username']);
+        $password = test_input($_POST['password']);
+        $email = test_input($_POST['email']);
+        $phone = test_input($_POST['phone']);
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        if (empty($_POST["username"])) {
             $usernameErr = "UserName bắt buộc nhập!";
-        else {
-            $username = test_input($_POST["username"]);
+            $flag = false;
+        } else {
+            $username = ($_POST["username"]);
             if (!preg_match("/^[a-zA-Z ]*$/", $username)) {
                 $usernameErr = "Chỉ chứa kí tự và khoảng trắng!";
+                $flag = false;
             }
         }
 
-        if (empty($_POST["password"]))
+        if (empty($_POST["password"])) {
             $passwordErr = "Password bắt buộc nhập!";
-        else {
+            $flag = false;
+        } else {
             $password = $_POST["password"];
             if (!test_input($password))
                 $passwordErr = "Password không được để trống!";
+            $flag = false;
         }
 
-        if (empty($_POST["confirmpassword"]))
+        if (empty($_POST["confirmpassword"])) {
             $comfirmpasswordErr = "Confirm Password bắt buộc nhập!";
-        else {
+            $flag = false;
+        } else {
             $confirmpassword = $_POST["confirmpassword"];
             if ($confirmpassword != $password)
                 $confirmpasswordErr = "Không khớp với Passwords, vui lòng kiểm tra lại!";
+            $flag = false;
         }
 
         if (empty($_POST["email"])) {
             $emailErr = "Email không được để trống!";
+            $flag = false;
+        } elseif (checkMailExists($conn, $email)) {
+            $emailErr = "Email đã tồn tại! Vui lòng nhập Email khác";
             $flag = false;
         } else {
             $email = test_input($_POST["email"]);
@@ -113,7 +125,7 @@
             $phone = test_input($_POST["phone"]);
         }
         if ($flag == true) {
-            $sql = "INSERT INTO accounts (username, password, email, phone) VALUES ('$username', '$password', '$email', '$phone')";
+            $sql = "INSERT INTO accounts (username, password, email, phone) VALUES ('$username', '$password_hash', '$email', '$phone')";
             if ($conn->query($sql) === true) {
                 $last_id = $conn->insert_id;
                 sendLink($email, $now);

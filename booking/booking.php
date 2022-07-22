@@ -32,6 +32,7 @@ if (isset($_SESSION['all'])) {
             <input type="hidden" id="" name="id_room" value="<?= $id_room ?>" />
             <button type="submit" name="booking">Booking</button>
         </form>
+        <a href="../index.php" class="btn btn-danger" style="margin-right: 1150px">Về trang chủ</a>
     </div>
 <?php
 } ?>

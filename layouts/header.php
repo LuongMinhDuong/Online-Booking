@@ -14,10 +14,10 @@
                     <a href="./register/form.php" class="btn">Register</a>
                 </li>
             </ul>
-            <form action="" method="get" target="" class="d-flex" id="search">
+            <!-- <form action="" method="get" target="" class="d-flex" id="search">
                 <input class="form-control me-2" name="key" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            </form> -->
         </div>
     </div>
 </nav>

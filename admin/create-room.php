@@ -7,9 +7,9 @@ include("header.php");
 ?>
 <div class="form-tt">
     <style>
-        body {
+        /* body {
             padding: 50px;
-        }
+        } */
 
         * {
             margin: 0;
